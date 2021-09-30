@@ -3,6 +3,9 @@ name: Pull core files
 on:
   workflow_dispatch:
 
+env:
+  DIRTY: 'FALSE'
+
 jobs:
   core-files:
     runs-on: ubuntu-latest
@@ -25,9 +28,14 @@ jobs:
           git config user.name 'Wiebe Kloosterman'
           git config user.email 'wiebe@celerypayroll.com'
           git add -A
+
+      - name: Commit
+        if: contains(env.DIRTY, ['TRUE'])
+        run: |
           git commit -m "refactor: Update Core files."
 
       - name: Create Pull Request
+        if: contains(env.DIRTY, ['TRUE'])
         uses: peter-evans/create-pull-request@v3
         with:
           title: 'Updated core files from repo-core'
