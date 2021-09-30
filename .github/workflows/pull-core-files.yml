@@ -19,3 +19,13 @@ jobs:
           git fetch
           git rm -rf src/app/Core/*
           git read-tree --prefix=src/app/Core/Models/ -u core/develop:src/includes/App/Models
+
+      - name: Create commits
+        run: |
+          git config user.name 'Wiebe Kloosterman'
+          git config user.email 'wiebe@celerypayroll.com'
+          git add -A
+          git commit -m "refactor: Update Core files."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
