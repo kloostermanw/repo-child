@@ -1,0 +1,21 @@
+name: Pull core files
+
+on:
+  workflow_dispatch:
+
+jobs:
+  core-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: test
+        run: |
+          git branch -a
+          git remote add -f -t develop --no-tags core https://github.com/kloostermanw/repo-core.git
+          git remote
+          git fetch
+          git rm -rf src/app/Core/*
+          git read-tree --prefix=src/app/Core/Models/ -u core/develop:src/includes/App/Models
