@@ -29,7 +29,9 @@ jobs:
           git config user.email 'wiebe@celerypayroll.com'
           git add -A
           git status --porcelain
+          echo $DIRTY
           if output=$(git status --porcelain) && [ -z "$output" ]; then export DIRTY='FALSE'; else export DIRTY='TRUE'; fi
+          echo $DIRTY
 
       - name: Commit
         if: contains(env.DIRTY, 'TRUE')
