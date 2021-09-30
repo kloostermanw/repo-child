@@ -1,6 +1,6 @@
 <?php
 
-class Dad
+class Mam
 {
 
 }

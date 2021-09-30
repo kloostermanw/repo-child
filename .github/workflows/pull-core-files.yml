@@ -2,6 +2,11 @@ name: Pull core files
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [ core-files-event ]
+
+env:
+  DIRTY: 'UNKNOWN'
 
 jobs:
   core-files:
@@ -11,11 +16,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: test
+      - name: pull core files
         run: |
-          git branch -a
           git remote add -f -t develop --no-tags core https://github.com/kloostermanw/repo-core.git
-          git remote
           git fetch
           git rm -rf src/app/Core/*
           git read-tree --prefix=src/app/Core/Models/ -u core/develop:src/includes/App/Models
+
+      - name: Create commits
+        run: |
+          git config user.name 'Wiebe Kloosterman'
+          git config user.email 'wiebe@celerypayroll.com'
+          git add -A
+          if output=$(git status --porcelain) && [ -z "$output" ]; then echo "DIRTY=NO" >> $GITHUB_ENV; else echo "DIRTY=YES" >> $GITHUB_ENV; fi
+
+      - name: Commit
+        if: ${{ env.DIRTY == 'YES' }}
+        run: |
+          git commit -m "refactor: Update Core files."
+
+      - name: Create Pull Request
+        id: cpr
+        if: ${{ env.DIRTY == 'YES' }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: 'Updated core files from repo-core'
+
+      - name: Check outputs
+        if: ${{ env.DIRTY == 'YES' }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
