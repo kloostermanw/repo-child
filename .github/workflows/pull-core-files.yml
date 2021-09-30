@@ -3,7 +3,7 @@ name: Pull core files
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: [ core-files ]
+    types: [ core-files-event ]
 
 env:
   DIRTY: 'UNKNOWN'
