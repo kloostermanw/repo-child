@@ -2,6 +2,8 @@ name: Pull core files
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [ core-files ]
 
 env:
   DIRTY: 'UNKNOWN'
