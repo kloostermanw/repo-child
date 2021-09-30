@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DIRTY: 'FALSE'
+  DIRTY: 'UNKNOWN'
 
 jobs:
   core-files:
@@ -28,6 +28,7 @@ jobs:
           git config user.name 'Wiebe Kloosterman'
           git config user.email 'wiebe@celerypayroll.com'
           git add -A
+          git status --porcelain
           if output=$(git status --porcelain) && [ -z "$output" ]; then export DIRTY='FALSE'; else export DIRTY='TRUE'; fi
 
       - name: Commit
