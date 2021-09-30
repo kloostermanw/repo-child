@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DIRTY: 'FALSE'
+  DIRTY: FALSE
 
 jobs:
   core-files:
@@ -28,9 +28,10 @@ jobs:
           git config user.name 'Wiebe Kloosterman'
           git config user.email 'wiebe@celerypayroll.com'
           git add -A
+          if output=$(git status --porcelain) && [ -z "$output" ]; then export DIRTY=FALSE; else export DIRTY=TRUE; fi
 
       - name: Commit
-        if: contains(env.DIRTY, 'TRUE')
+        if: contains(env.DIRTY, TRUE)
         run: |
           git commit -m "refactor: Update Core files."
 
