@@ -13,15 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout the current repository
         uses: actions/checkout@v2
 
-      - name: pull core files
+      - name: Pull the models and core files
         run: |
           git remote add -f -t develop --no-tags core https://github.com/kloostermanw/repo-core.git
           git fetch
           git rm -rf src/app/Core/*
           git read-tree --prefix=src/app/Core/Models/ -u core/develop:src/includes/App/Models
+          git read-tree --prefix=src/app/Core/Base/ -u core/develop:src/includes/App/Base
+          git read-tree --prefix=src/app/Core/Controllers/ -u core/develop:src/includes/App/Controllers
+          git rm -rf src/resources/languages/*
+          git read-tree --prefix=src/resources/languages/ -u core/develop:src/languages
 
       - name: Create commits
         run: |
